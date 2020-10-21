@@ -1,11 +1,14 @@
 {
-  "name": "vue-windrose-graph",
+  "name": "@bradsjm/vue-windrose-graph",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vue WindRose component combining SteelSeries with RGraph.Rose",
   "main": "dist/vue-windrose-graph.ssr.js",
   "browser": "dist/vue-windrose-graph.esm.js",
   "module": "dist/vue-windrose-graph.esm.js",
   "unpkg": "dist/vue-windrose-graph.min.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "files": [
     "dist/*",
     "src/**/*.vue"
