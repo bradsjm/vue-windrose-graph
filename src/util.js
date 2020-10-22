@@ -1,3 +1,8 @@
+function toArray(value) {
+  if (undefined === value || Array.isArray(value)) return value;
+  return value.split(",").map(Number);
+}
+
 function toBoolean(value) {
   if ("boolean" === typeof value || undefined === value) return value;
   switch (
@@ -20,17 +25,17 @@ function toBoolean(value) {
   }
 }
 
-function toNumber(value) {
-  return "number" === typeof value || undefined === value
-    ? value
-    : Number(value);
-}
-
 function toImage(value) {
   if (undefined === value) return value;
   var img = new Image();
   img.src = value;
   return img;
+}
+
+function toNumber(value) {
+  return "number" === typeof value || undefined === value
+    ? value
+    : Number(value);
 }
 
 function toUpper(value) {
@@ -40,4 +45,4 @@ function toUpper(value) {
     : value.toString().toUpperCase();
 }
 
-export { toNumber, toBoolean, toImage, toUpper };
+export { toArray, toBoolean, toImage, toNumber, toUpper };

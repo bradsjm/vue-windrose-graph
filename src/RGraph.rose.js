@@ -11,14 +11,12 @@
 
 // Modified to allow passing canvas directly by Jonathan Bradshaw
 
-RGraph = window.RGraph || { isrgraph: true, isRGraph: true, rgraph: true };
-RGraph.Effects = RGraph.Effects || {};
-RGraph.Effects.Rose = RGraph.Effects.Rose || {};
+import "./RGraph.common.core";
 
 //
 // The rose chart constuctor
 //
-RGraph.Rose = function(conf) {
+export default function(conf) {
   this.id = conf.id;
   this.canvas = conf.canvas ?? document.getElementById(conf.id);
   this.context = this.canvas.getContext ? this.canvas.getContext("2d") : null;
@@ -2244,4 +2242,4 @@ RGraph.Rose = function(conf) {
   // contains configuration data - handle that.
   //
   RGraph.parseObjectStyleConfig(this, conf.options);
-};
+}

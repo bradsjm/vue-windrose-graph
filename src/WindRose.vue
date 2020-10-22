@@ -1,7 +1,5 @@
 <template>
-  <div ref="rose">
-    <canvas ref="canvas" />
-  </div>
+  <canvas ref="canvas" />
 </template>
 
 <script>
@@ -14,10 +12,9 @@ import {
   ForegroundType,
 } from "steelseries";
 
-import { toNumber, toBoolean, toUpper } from "./util";
+import { toNumber, toArray, toBoolean, toUpper } from "./util";
 
-import "./RGraph.common.core";
-import "./RGraph.rose";
+import Rose from "./RGraph.rose";
 
 /**
  * Wind Rose
@@ -84,11 +81,11 @@ export default {
       type: String,
     },
     /**
-     * Rose array of 16 values to plot
+     * Rose array of 16 values (starting at north) to plot
      */
     value: {
       required: true,
-      type: Array,
+      type: [Array, String],
     },
   },
   methods: {
@@ -188,9 +185,9 @@ export default {
       this.buffers.plot.height = size;
 
       // Create a new rose plot
-      const rose = new RGraph.Rose({
+      const rose = new Rose({
         canvas: this.buffers.plot,
-        data: this.value,
+        data: toArray(this.value),
         options: {
           margin: Math.ceil(40 / this.value.length),
           colors: [this.radialColor],
