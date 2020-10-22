@@ -162,21 +162,21 @@ export default {
           size,
           false
         );
-        ctx.save();
-        // draw title
-        if (this.title) {
-          const backgroundColor =
-            BackgroundColor[toUpper(this.backgroundColor)];
-          ctx.font = 0.046728 * size + "px Arial,Verdana,sans-serif";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillStyle = backgroundColor.labelColor.getRgbColor();
-          ctx.strokeStyle = backgroundColor.labelColor.getRgbaColor();
-          ctx.fillStyle = backgroundColor.labelColor.getRgbaColor();
-          ctx.font = 0.06 * size + "px serif";
-          ctx.fillText(this.title, size / 2, size * 0.3, size * 0.3);
-          ctx.restore();
-        }
+      }
+
+      if (!this.buffers.title && this.title) {
+        this.buffers.title = document.createElement("canvas");
+        this.buffers.title.width = size;
+        this.buffers.title.height = size;
+        const ctx = this.buffers.title.getContext("2d");
+        const backgroundColor = BackgroundColor[toUpper(this.backgroundColor)];
+        ctx.font = 0.046728 * size + "px Arial,Verdana,sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = backgroundColor.labelColor.getRgbColor();
+        ctx.strokeStyle = backgroundColor.labelColor.getRgbaColor();
+        ctx.fillStyle = backgroundColor.labelColor.getRgbaColor();
+        ctx.fillText(this.title, size / 2, size * 0.3, size * 0.3);
       }
 
       // rose plot canvas buffer
@@ -208,6 +208,7 @@ export default {
       ctxRoseCanvas.drawImage(this.buffers.background, 0, 0);
       ctxRoseCanvas.drawImage(this.buffers.plot, offset, offset);
       ctxRoseCanvas.drawImage(this.buffers.foreground, 0, 0);
+      if (this.title) ctxRoseCanvas.drawImage(this.buffers.title, 0, 0);
     },
   },
   data() {
@@ -227,7 +228,7 @@ export default {
       this.drawRose();
     },
     title() {
-      this.buffers.foreground = undefined;
+      this.buffers.title = undefined;
       this.drawRose();
     },
     value() {
