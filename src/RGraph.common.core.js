@@ -1917,7 +1917,7 @@ window.RGraph = window.RGraph || {
     var decimal_seperator = typeof args.point === "string" ? args.point : ".";
     var thousand_seperator =
       typeof args.thousand === "string" ? args.thousand : ",";
-    RegExp.$1 = "";
+    //RegExp.$1 = "";
     var i, j;
 
     if (typeof args.formatter === "function") {
@@ -1979,7 +1979,7 @@ window.RGraph = window.RGraph || {
     if (decimal.length) {
       output = output + decimal_seperator + decimal;
       decimal = "";
-      RegExp.$1 = "";
+      //RegExp.$1 = "";
     }
 
     // Minor bugette
