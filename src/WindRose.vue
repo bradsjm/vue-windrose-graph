@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative;">
+  <div>
     <canvas ref="roseCanvas" style="position: absolute;" />
     <canvas ref="odometerCanvas" style="position: absolute;" />
   </div>
