@@ -1,5 +1,7 @@
 <template>
-  <div :style="{ height: size + 'px', width: size + 'px' }">
+  <div
+    :style="{ height: size + 'px', width: size + 'px', position: 'relative' }"
+  >
     <canvas ref="roseCanvas" style="position: absolute; left: 0; top: 0;" />
     <canvas ref="odometerCanvas" style="position: absolute;" />
   </div>
@@ -216,9 +218,9 @@ export default {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (var i = 0; i < 4; i++) {
-        ctx.translate(size / 2, size * 0.125);
+        ctx.translate(size / 2, size * 0.14);
         ctx.fillText(compassPoints[i], 0, 0, size);
-        ctx.translate(-size / 2, -size * 0.125);
+        ctx.translate(-size / 2, -size * 0.14);
         ctx.translate(size / 2, size / 2);
         ctx.rotate(Math.PI / 2);
         ctx.translate(-size / 2, -size / 2);
@@ -293,7 +295,7 @@ export default {
       const digits = toNumber(this.odometerDigits);
       const height = Math.ceil(size * 0.08);
       const width = Math.ceil(Math.floor(height * 0.68) * digits);
-      const top = Math.ceil(size * 0.75);
+      const top = Math.ceil(size * 0.72);
       const left = Math.ceil((size - width) / 2);
       const ctx = this.$refs["odometerCanvas"];
       ctx.height = height;
@@ -307,11 +309,10 @@ export default {
         valueBackColor: this.odometerBackColor,
         valueForeColor: this.odometerForeColor,
         wobbleFactor: toNumber(this.odometerWobbleFactor),
-        value: toNumber(this.odometerValue),
       });
+      this.odometer.setValue(this.odometerValue);
     },
     draw() {
-      //this.sizeCanvas();
       this.buildFrame();
       this.buildBackground();
       this.buildForeground();
