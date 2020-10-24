@@ -348,8 +348,13 @@ export default {
       this.buildPlot();
       this.drawGraph();
     },
-    odometerValue(newValue) {
-      this.odometer && this.odometer.setValueAnimated(toNumber(newValue));
+    odometerValue(newValue, oldValue) {
+      if (!this.odometer) return;
+      if (newValue > oldValue) {
+        this.odometer.setValueAnimated(toNumber(newValue));
+      } else {
+        this.odometer.setValue(toNumber(newValue));
+      }
     },
   },
 };
