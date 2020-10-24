@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <canvas ref="roseCanvas" style="position: absolute;" />
+  <div :style="{ height: size + 'px', width: size + 'px' }">
+    <canvas ref="roseCanvas" style="position: absolute; left: 0; top: 0;" />
     <canvas ref="odometerCanvas" style="position: absolute;" />
   </div>
 </template>
@@ -91,6 +91,9 @@ export default {
       required: false,
       type: String,
     },
+    /**
+     * Total number of digits (including decimal) to display
+     */
     odometerDigits: {
       default: 5,
       required: false,
@@ -151,7 +154,7 @@ export default {
      * Set the size in pixels of the canvas (height and width)
      */
     size: {
-      default: undefined,
+      default: 150,
       required: false,
       type: [Number, String],
       validator: (value) => !Number.isNaN(value),
@@ -173,103 +176,90 @@ export default {
     },
   },
   methods: {
-    sizeCanvas() {
-      const ctx = this.$refs["roseCanvas"];
-      const size = this.size
-        ? toNumber(this.size)
-        : Math.min(ctx.width, ctx.height);
-      ctx.width = size;
-      ctx.height = size;
-    },
     buildFrame() {
       if (!toBoolean(this.frameVisible)) return;
-      const width = this.$refs["roseCanvas"].width;
-      const height = this.$refs["roseCanvas"].height;
+      const size = toNumber(this.size);
       this.buffers.frame = document.createElement("canvas");
-      this.buffers.frame.width = width;
-      this.buffers.frame.height = height;
+      this.buffers.frame.width = size;
+      this.buffers.frame.height = size;
       const ctx = this.buffers.frame.getContext("2d");
       drawFrame(
         ctx,
         FrameDesign[toUpper(this.frameDesign)],
-        width / 2,
-        height / 2,
-        width,
-        height
+        size / 2,
+        size / 2,
+        size,
+        size
       );
     },
     buildBackground() {
       if (!toBoolean(this.backgroundVisible)) return;
-      const width = this.$refs["roseCanvas"].width;
-      const height = this.$refs["roseCanvas"].height;
+      const size = toNumber(this.size);
       this.buffers.background = document.createElement("canvas");
-      this.buffers.background.width = width;
-      this.buffers.background.height = height;
+      this.buffers.background.width = size;
+      this.buffers.background.height = size;
       const ctx = this.buffers.background.getContext("2d");
       drawBackground(
         ctx,
         BackgroundColor[toUpper(this.backgroundColor)],
-        width / 2,
-        height / 2,
-        width,
-        height
+        size / 2,
+        size / 2,
+        size,
+        size
       );
 
       const compassPoints = ["N", "E", "S", "W"];
-      ctx.font = 0.08 * height + "px serif";
+      ctx.font = 0.08 * size + "px serif";
       ctx.fillStyle = BackgroundColor[
         toUpper(this.backgroundColor)
       ].labelColor.getRgbColor();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (var i = 0; i < 4; i++) {
-        ctx.translate(width / 2, height * 0.125);
-        ctx.fillText(compassPoints[i], 0, 0, width);
-        ctx.translate(-width / 2, -height * 0.125);
-        ctx.translate(width / 2, height / 2);
+        ctx.translate(size / 2, size * 0.125);
+        ctx.fillText(compassPoints[i], 0, 0, size);
+        ctx.translate(-size / 2, -size * 0.125);
+        ctx.translate(size / 2, size / 2);
         ctx.rotate(Math.PI / 2);
-        ctx.translate(-width / 2, -height / 2);
+        ctx.translate(-size / 2, -size / 2);
       }
     },
     buildForeground() {
       if (!toBoolean(this.foregroundVisible)) return;
-      const width = this.$refs["roseCanvas"].width;
-      const height = this.$refs["roseCanvas"].height;
+      const size = toNumber(this.size);
       this.buffers.foreground = document.createElement("canvas");
-      this.buffers.foreground.width = width;
-      this.buffers.foreground.height = height;
+      this.buffers.foreground.width = size;
+      this.buffers.foreground.height = size;
       const ctx = this.buffers.background.getContext("2d");
       drawForeground(
         ctx,
         ForegroundType[toUpper(this.foregroundType)],
-        width,
-        height,
+        size,
+        size,
         false
       );
     },
     buildTitle() {
       if (!this.title) return;
-      const width = this.$refs["roseCanvas"].width;
-      const height = this.$refs["roseCanvas"].height;
+      const size = toNumber(this.size);
       this.buffers.title = document.createElement("canvas");
-      this.buffers.title.width = width;
-      this.buffers.title.height = height;
+      this.buffers.title.width = size;
+      this.buffers.title.height = size;
       const ctx = this.buffers.title.getContext("2d");
       const backgroundColor = BackgroundColor[toUpper(this.backgroundColor)];
-      ctx.font = 0.046728 * width + "px Arial,Verdana,sans-serif";
+      ctx.font = 0.046728 * size + "px Arial,Verdana,sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = backgroundColor.labelColor.getRgbColor();
       ctx.strokeStyle = backgroundColor.labelColor.getRgbaColor();
       ctx.fillStyle = backgroundColor.labelColor.getRgbaColor();
-      ctx.fillText(this.title, width / 2, width * 0.3, height * 0.3);
+      ctx.fillText(this.title, size / 2, size * 0.3, size * 0.3);
     },
     buildPlot() {
-      const width = this.$refs["roseCanvas"].width;
-      const height = this.$refs["roseCanvas"].height;
+      const size = toNumber(this.size);
       this.buffers.plot = document.createElement("canvas");
-      this.buffers.plot.width = width;
-      this.buffers.plot.height = height;
+      this.buffers.plot.width = size;
+      this.buffers.plot.height = size;
       new Rose({
         canvas: this.buffers.plot,
         data: toArray(this.value),
@@ -288,6 +278,8 @@ export default {
     },
     drawGraph() {
       const canvas = this.$refs["roseCanvas"];
+      canvas.width = toNumber(this.size);
+      canvas.height = toNumber(this.size);
       const ctx = canvas.getContext("2d");
       this.buffers.frame && ctx.drawImage(this.buffers.frame, 0, 0);
       this.buffers.background && ctx.drawImage(this.buffers.background, 0, 0);
@@ -297,11 +289,12 @@ export default {
     },
     drawOdometer() {
       if (!toBoolean(this.odometerVisible)) return;
+      const size = toNumber(this.size);
       const digits = toNumber(this.odometerDigits);
-      const height = Math.ceil(this.$refs["roseCanvas"].height * 0.08);
+      const height = Math.ceil(size * 0.08);
       const width = Math.ceil(Math.floor(height * 0.68) * digits);
-      const top = Math.ceil(this.$refs["roseCanvas"].height * 0.7);
-      const left = Math.ceil((this.$refs["roseCanvas"].width - width) / 2);
+      const top = Math.ceil(size * 0.75);
+      const left = Math.ceil((size - width) / 2);
       const ctx = this.$refs["odometerCanvas"];
       ctx.height = height;
       ctx.width = width;
@@ -318,7 +311,7 @@ export default {
       });
     },
     draw() {
-      this.sizeCanvas();
+      //this.sizeCanvas();
       this.buildFrame();
       this.buildBackground();
       this.buildForeground();
