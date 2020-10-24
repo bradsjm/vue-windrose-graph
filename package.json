@@ -1,5 +1,5 @@
 {
-  "name": "vue-windrose-graph",
+  "name": "@bradsjm/vue-windrose-graph",
   "version": "1.0.2",
   "description": "Vue WindRose component combining SteelSeries with RGraph.Rose",
   "main": "dist/vue-windrose-graph.ssr.js",
