@@ -1,6 +1,6 @@
 {
   "name": "vue-windrose-graph",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Vue WindRose component combining SteelSeries with RGraph.Rose",
   "main": "dist/vue-windrose-graph.ssr.js",
   "browser": "dist/vue-windrose-graph.esm.js",
